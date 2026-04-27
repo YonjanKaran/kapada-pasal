@@ -5,50 +5,111 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kapada Luxe</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
-body {
-  font-family: Arial;
-  margin: 0;
-  background: #f5f5f5;
+body{
+  font-family: 'Inter', sans-serif;
+  margin:0;
+  background:#f5f5f7;
+  color:#111;
 }
 
-header {
-  padding: 15px;
-  background: black;
-  color: white;
-  display: flex;
-  justify-content: space-between;
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  padding:16px 24px;
+  background:white;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
-  gap: 15px;
-  padding: 15px;
+.logo{font-weight:600;}
+
+.btn{
+  padding:8px 14px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  background:black;
+  color:white;
 }
 
-.card {
-  background: white;
-  padding: 10px;
-  border-radius: 10px;
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:20px;
+  padding:20px;
 }
 
-button {
-  padding: 8px;
-  margin: 3px;
-  cursor: pointer;
+.card{
+  background:white;
+  border-radius:14px;
+  padding:15px;
+  transition:.3s;
+  box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
-.cart {
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 300px;
-  height: 100%;
-  background: white;
-  padding: 10px;
-  overflow-y: auto;
-  border-left: 2px solid #ddd;
+.card:hover{
+  transform:translateY(-6px);
+}
+
+.card img{
+  width:100%;
+  border-radius:10px;
+}
+
+/* CART */
+.cart{
+  position:fixed;
+  right:-100%;
+  top:0;
+  width:90%;
+  max-width:360px;
+  height:100%;
+  background:white;
+  padding:20px;
+  transition:.3s;
+  z-index:1000;
+}
+
+.cart.open{ right:0; }
+
+.backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  display:none;
+}
+.backdrop.show{ display:block; }
+
+/* TRUST */
+.trust{
+  text-align:center;
+  padding:10px;
+  font-size:14px;
+  color:#555;
+}
+
+/* QTY */
+.qty{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.qty button{
+  width:28px;
+  height:28px;
+}
+
+/* WISHLIST */
+.heart{
+  cursor:pointer;
+  font-size:18px;
 }
 </style>
 </head>
@@ -56,120 +117,131 @@ button {
 <body>
 
 <header>
-  <h3>Kapada Luxe</h3>
+  <div class="logo">Kapada Luxe</div>
   <div>
-    ❤️ <span id="wishCount">0</span> |
-    🛒 <span id="cartCount">0</span>
+    ❤️ <span id="wishCount">0</span>
+    <button class="btn" onclick="toggleCart()">Cart (<span id="cartCount">0</span>)</button>
   </div>
 </header>
 
-<!-- TRUST -->
-<div style="padding:10px;text-align:center;">
+<div class="trust">
   Free Delivery • 7 Days Return • Premium Quality
 </div>
 
-<!-- PRODUCTS -->
 <div class="grid" id="products"></div>
 
 <!-- CART -->
-<div class="cart">
+<div class="cart" id="cart">
   <h3>Cart</h3>
   <div id="cartItems"></div>
   <h4>Total: Rs <span id="total">0</span></h4>
 
-  <button onclick="whatsappOrder()">Order via WhatsApp</button>
-  <button onclick="buyNow()">Buy Now</button>
-  <button onclick="esewaPay()">Pay with eSewa</button>
+  <button class="btn" onclick="whatsappOrder()">WhatsApp Order</button>
+  <button class="btn" onclick="buyNow()">Buy Now</button>
+  <button class="btn" onclick="esewaPay()">eSewa Pay</button>
 </div>
+
+<div class="backdrop" onclick="toggleCart()" id="backdrop"></div>
 
 <script>
 
-let products = [
-  {id:1,name:"Shirt",price:1000},
-  {id:2,name:"Pant",price:1500},
-  {id:3,name:"Jacket",price:2500}
+let products=[
+ {id:1,name:"Shirt",price:1000,img:"https://via.placeholder.com/300"},
+ {id:2,name:"Pant",price:1500,img:"https://via.placeholder.com/300"},
+ {id:3,name:"Jacket",price:2500,img:"https://via.placeholder.com/300"}
 ];
 
-let cart = [];
-let wishlist = [];
+let cart=[];
+let wishlist=[];
 
+/* RENDER */
 function renderProducts(){
-  let html="";
-  products.forEach(p=>{
-    html+=`
-    <div class="card">
-      <h4>${p.name}</h4>
-      <p>Rs ${p.price}</p>
+ let html="";
+ products.forEach(p=>{
+  html+=`
+  <div class="card">
+    <img src="${p.img}">
+    <h4>${p.name}</h4>
+    <p>Rs ${p.price}</p>
 
-      <button onclick="addToCart(${p.id})">Add to Cart</button>
-      <button onclick="addWishlist(${p.id})">❤️</button>
-    </div>`;
-  });
-  document.getElementById("products").innerHTML=html;
+    <button class="btn" onclick="addToCart(${p.id})">Add</button>
+    <span class="heart" onclick="addWishlist(${p.id})">❤️</span>
+  </div>`;
+ });
+ document.getElementById("products").innerHTML=html;
 }
 
+/* CART */
 function addToCart(id){
-  let item = cart.find(x=>x.id===id);
-  if(item){
-    item.qty++;
-  } else {
-    let p = products.find(x=>x.id===id);
-    cart.push({...p, qty:1});
-  }
-  updateCart();
+ let item=cart.find(x=>x.id===id);
+ if(item){ item.qty++; }
+ else{
+  let p=products.find(x=>x.id===id);
+  cart.push({...p,qty:1});
+ }
+ updateCart();
 }
 
 function updateCart(){
-  let html="";
-  let total=0;
-  cart.forEach(i=>{
-    total += i.price*i.qty;
-    html+=`
-    <div>
-      ${i.name} 
-      <button onclick="changeQty(${i.id},-1)">-</button>
-      ${i.qty}
-      <button onclick="changeQty(${i.id},1)">+</button>
-      Rs ${i.price*i.qty}
-    </div>`;
-  });
+ let html="";
+ let total=0;
 
-  document.getElementById("cartItems").innerHTML=html;
-  document.getElementById("total").innerText=total;
-  document.getElementById("cartCount").innerText=cart.length;
+ cart.forEach(i=>{
+  total+=i.price*i.qty;
+
+  html+=`
+  <div>
+   ${i.name}
+   <div class="qty">
+    <button onclick="changeQty(${i.id},-1)">-</button>
+    ${i.qty}
+    <button onclick="changeQty(${i.id},1)">+</button>
+   </div>
+   Rs ${i.price*i.qty}
+  </div><hr>`;
+ });
+
+ document.getElementById("cartItems").innerHTML=html;
+ document.getElementById("total").innerText=total;
+ document.getElementById("cartCount").innerText=cart.length;
 }
 
-function changeQty(id,change){
-  let item = cart.find(x=>x.id===id);
-  item.qty += change;
-  if(item.qty<=0){
-    cart = cart.filter(x=>x.id!==id);
-  }
-  updateCart();
+function changeQty(id,c){
+ let i=cart.find(x=>x.id===id);
+ i.qty+=c;
+ if(i.qty<=0) cart=cart.filter(x=>x.id!==id);
+ updateCart();
 }
 
+/* WISHLIST */
 function addWishlist(id){
-  if(!wishlist.includes(id)){
-    wishlist.push(id);
-  }
-  document.getElementById("wishCount").innerText=wishlist.length;
+ if(!wishlist.includes(id)) wishlist.push(id);
+ document.getElementById("wishCount").innerText=wishlist.length;
 }
 
+/* CART TOGGLE */
+function toggleCart(){
+ document.getElementById("cart").classList.toggle("open");
+ document.getElementById("backdrop").classList.toggle("show");
+}
+
+/* WHATSAPP */
 function whatsappOrder(){
-  let msg="Order:\n";
-  cart.forEach(i=>{
-    msg += `${i.name} x${i.qty} = Rs ${i.price*i.qty}\n`;
-  });
-
-  window.open("https://wa.me/977XXXXXXXXXX?text="+encodeURIComponent(msg));
+ let msg="Order:%0A";
+ cart.forEach(i=>{
+  msg+=`${i.name} x${i.qty} = Rs ${i.price*i.qty}%0A`;
+ });
+ window.open("https://wa.me/977XXXXXXXXXX?text="+msg);
 }
 
+/* BUY */
 function buyNow(){
-  alert("Order placed!");
+ alert("Order placed successfully!");
 }
 
+/* ESEWA */
 function esewaPay(){
-  alert("eSewa payment demo (integration later)");
+ alert("eSewa integration demo (backend needed)");
 }
 
 renderProducts();
