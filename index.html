@@ -3,271 +3,177 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kapada Pasal — Luxury Collection</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<title>Kapada Luxe</title>
+
 <style>
-:root {
-  --ink: #0c0b09;
-  --cream: #f7f3ee;
-  --warm: #ede8e1;
-  --gold: #b89a6a;
-  --gold-light: #d4b88a;
-  --gold-pale: #f0e6d3;
-  --muted: #8a8279;
-  --white: #ffffff;
-  --shadow: 0 25px 60px rgba(12,11,9,0.12);
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #f5f5f5;
 }
-*, *::before, *::after { box-sizing: border-box; margin:0; padding:0; }
-body { font-family:'Jost', sans-serif; background: var(--cream); color: var(--ink); overflow-x:hidden; }
-a { text-decoration:none; color:inherit; }
 
-/* NAVBAR */
-nav { display:flex; justify-content:space-between; align-items:center; padding:20px 50px; position:fixed; width:100%; top:0; z-index:1000; background:rgba(247,243,238,0.95); backdrop-filter:blur(10px); box-shadow:0 1px 0 rgba(184,154,106,0.1); }
-nav .logo { font-family:'Cormorant Garamond', serif; font-size:24px; font-weight:300; letter-spacing:0.12em; text-transform:uppercase; color: var(--ink);}
-nav .nav-right { display:flex; gap:30px; align-items:center; }
-nav .cart-trigger { cursor:pointer; background:none; border:none; font-family:'Jost',sans-serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color: var(--ink); }
-.cart-count { display:inline-flex; justify-content:center; align-items:center; width:18px;height:18px;border-radius:50%;background:var(--gold);color:white;font-size:9px; font-weight:500; margin-left:4px; }
+header {
+  padding: 15px;
+  background: black;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
 
-/* HERO */
-.hero { height:80vh; display:flex; align-items:center; justify-content:center; text-align:center; background:var(--warm); position:relative; }
-.hero h1 { font-family:'Cormorant Garamond', serif; font-size:clamp(52px,6vw,88px); font-weight:300; color: var(--ink); margin-bottom:20px; }
-.hero h1 em { color: var(--gold); font-style:italic; }
-.hero p { font-size:14px; color: var(--muted); margin-bottom:20px; }
-.hero button { padding:12px 30px; background:var(--ink); color:var(--cream); border:none; cursor:pointer; text-transform:uppercase; font-size:10px; letter-spacing:0.2em; transition:0.3s; }
-.hero button:hover { background:var(--gold); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+  gap: 15px;
+  padding: 15px;
+}
 
-/* FILTERS */
-.products-section { padding:120px 50px 50px; }
-.filter-bar { display:flex; gap:10px; margin-bottom:40px; flex-wrap:wrap; justify-content:flex-end; }
-.filter-btn { padding:6px 18px; border:1px solid rgba(184,154,106,0.3); background:transparent; cursor:pointer; text-transform:uppercase; font-size:10px; letter-spacing:0.15em; transition:0.3s; color: var(--muted);}
-.filter-btn:hover { border-color: var(--gold); color: var(--gold);}
-.filter-btn.active { background: var(--ink); border-color: var(--ink); color: var(--cream); }
+.card {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+}
 
-/* SEARCH */
-#search-bar { padding:6px 10px; border:1px solid rgba(184,154,106,0.3); width:200px; font-size:10px; letter-spacing:0.1em; margin-right:auto; }
+button {
+  padding: 8px;
+  margin: 3px;
+  cursor: pointer;
+}
 
-/* PRODUCT GRID */
-.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:30px; }
-.card { background:var(--white); cursor:pointer; overflow:hidden; position:relative; transition:0.4s; }
-.card:hover { transform:translateY(-5px); box-shadow: var(--shadow);}
-.card-img-wrap { position:relative; aspect-ratio:3/4; overflow:hidden; background:var(--warm);}
-.card-img-wrap img { width:100%; height:100%; object-fit:cover; transition:0.4s; }
-.card:hover .card-img-wrap img { transform:scale(1.05);}
-.card-info { padding:15px; }
-.card-category { font-size:9px; color:var(--gold); text-transform:uppercase; margin-bottom:5px; }
-.card-name { font-family:'Cormorant Garamond', serif; font-size:18px; margin-bottom:8px; }
-.card-price { font-size:14px; color:var(--gold); }
-
-/* CARD OVERLAY BUTTON */
-.card-overlay { position:absolute; inset:0; display:flex; justify-content:center; align-items:center; background:rgba(12,11,9,0.45); opacity:0; transition:0.3s; gap:10px; }
-.card:hover .card-overlay { opacity:1; }
-.overlay-btn { padding:8px 18px; background:var(--cream); border:none; cursor:pointer; font-size:9px; text-transform:uppercase; }
-.overlay-btn.gold { background:var(--gold); color:white;}
-.overlay-btn:hover { background:var(--ink); color:var(--cream);}
-.overlay-btn.gold:hover { background:var(--gold-light);}
-
-/* CART DRAWER */
-.cart-drawer { position:fixed; right:-400px; top:0; width:380px; height:100%; background:var(--cream); box-shadow:-15px 0 50px rgba(12,11,9,0.15); transition:0.5s; display:flex; flex-direction:column; z-index:2000;}
-.cart-drawer.open { right:0;}
-.cart-header, .cart-footer { padding:20px; border-bottom:1px solid rgba(184,154,106,0.2);}
-.cart-header { display:flex; justify-content:space-between; align-items:center; border-bottom:none;}
-.cart-body { flex:1; overflow-y:auto; padding:10px 20px;}
-.cart-item { display:flex; justify-content:space-between; margin-bottom:12px; }
-.cart-item img { width:60px; height:70px; object-fit:cover;}
-.qty-ctrl { display:flex; align-items:center; gap:5px; }
-.qty-btn { width:25px; height:25px; border:1px solid rgba(184,154,106,0.3); background:transparent; cursor:pointer; }
-.cart-total-row { display:flex; justify-content:space-between; font-size:12px; font-weight:bold; margin-bottom:15px;}
-.btn-primary { width:100%; padding:12px; background:var(--ink); color:var(--cream); border:none; cursor:pointer; text-transform:uppercase; font-size:10px; letter-spacing:0.15em; }
-.btn-primary:hover { background:var(--gold); }
-
-/* CONTACT SECTION */
-.contact-section { background:var(--ink); color:var(--cream); display:grid; grid-template-columns:1fr 1fr; gap:50px; padding:80px 50px; }
-.contact-left .section-title em { color: var(--gold);}
-.contact-row { display:flex; gap:15px; align-items:center; }
-.contact-text strong { display:block; margin-bottom:2px; font-size:11px; text-transform:uppercase; }
-
+.cart {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  background: white;
+  padding: 10px;
+  overflow-y: auto;
+  border-left: 2px solid #ddd;
+}
 </style>
 </head>
+
 <body>
 
-<nav>
-  <div class="logo">Kapada <span>Pasal</span></div>
-  <div class="nav-right">
-    <input type="text" id="search-bar" placeholder="Search products...">
-    <button class="cart-trigger">Cart <span class="cart-count">0</span></button>
+<header>
+  <h3>Kapada Luxe</h3>
+  <div>
+    ❤️ <span id="wishCount">0</span> |
+    🛒 <span id="cartCount">0</span>
   </div>
-</nav>
+</header>
 
-<section class="hero">
-  <div class="hero-text">
-    <h1>Kapada <em>Pasal</em></h1>
-    <p>New Collection Available</p>
-    <button>Shop Now</button>
-  </div>
-</section>
-
-<section class="products-section">
-  <div class="filter-bar">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="men">Men</button>
-    <button class="filter-btn" data-filter="women">Women</button>
-    <button class="filter-btn" data-filter="kids">Kids</button>
-  </div>
-  <div class="grid" id="product-grid">
-    <!-- Products inserted by JS -->
-  </div>
-</section>
-
-<!-- CART DRAWER -->
-<div class="cart-drawer" id="cart-drawer">
-  <div class="cart-header">
-    <h3>Cart</h3>
-    <button class="cart-close">&times;</button>
-  </div>
-  <div class="cart-body" id="cart-body">
-    <p>Your cart is empty.</p>
-  </div>
-  <div class="cart-footer">
-    <div class="cart-total-row">
-      <span>Total:</span>
-      <span id="cart-total">Rs 0</span>
-    </div>
-    <button class="btn-primary" id="whatsapp-order">Order via WhatsApp</button>
-  </div>
+<!-- TRUST -->
+<div style="padding:10px;text-align:center;">
+  Free Delivery • 7 Days Return • Premium Quality
 </div>
 
-<section class="contact-section">
-  <div class="contact-left">
-    <div class="section-title">Contact <em>Us</em></div>
-    <div class="contact-info">
-      <div class="contact-row">
-        <div class="contact-icon">&#9742;</div>
-        <div class="contact-text"><strong>Phone</strong>+977 9800000000</div>
-      </div>
-      <div class="contact-row">
-        <div class="contact-icon">&#9993;</div>
-        <div class="contact-text"><strong>Email</strong><a href="mailto:kapadapasal@gmail.com" style="color:white;">kapadapasal@gmail.com</a></div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- PRODUCTS -->
+<div class="grid" id="products"></div>
+
+<!-- CART -->
+<div class="cart">
+  <h3>Cart</h3>
+  <div id="cartItems"></div>
+  <h4>Total: Rs <span id="total">0</span></h4>
+
+  <button onclick="whatsappOrder()">Order via WhatsApp</button>
+  <button onclick="buyNow()">Buy Now</button>
+  <button onclick="esewaPay()">Pay with eSewa</button>
+</div>
 
 <script>
-const products = [
-  {id:1,name:"Men Shirt",price:1200,category:"men",img:"https://via.placeholder.com/300x400"},
-  {id:2,name:"Women Dress",price:1800,category:"women",img:"https://via.placeholder.com/300x400"},
-  {id:3,name:"Kids T-shirt",price:800,category:"kids",img:"https://via.placeholder.com/300x400"},
-  {id:4,name:"Men Jacket",price:2500,category:"men",img:"https://via.placeholder.com/300x400"},
-  {id:5,name:"Women Skirt",price:1500,category:"women",img:"https://via.placeholder.com/300x400"},
-  {id:6,name:"Kids Shorts",price:600,category:"kids",img:"https://via.placeholder.com/300x400"},
+
+let products = [
+  {id:1,name:"Shirt",price:1000},
+  {id:2,name:"Pant",price:1500},
+  {id:3,name:"Jacket",price:2500}
 ];
 
 let cart = [];
+let wishlist = [];
 
-const productGrid = document.getElementById('product-grid');
-const searchBar = document.getElementById('search-bar');
-const filterBtns = document.querySelectorAll('.filter-btn');
-const cartDrawer = document.getElementById('cart-drawer');
-const cartBody = document.getElementById('cart-body');
-const cartTrigger = document.querySelector('.cart-trigger');
-const cartClose = document.querySelector('.cart-close');
-const cartTotal = document.getElementById('cart-total');
-const whatsappBtn = document.getElementById('whatsapp-order');
+function renderProducts(){
+  let html="";
+  products.forEach(p=>{
+    html+=`
+    <div class="card">
+      <h4>${p.name}</h4>
+      <p>Rs ${p.price}</p>
 
-function renderProducts(filter="all", search="") {
-  productGrid.innerHTML = '';
-  const filtered = products.filter(p => 
-    (filter==="all" || p.category===filter) &&
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
-  filtered.forEach(p => {
-    const card = document.createElement('div');
-    card.className="card";
-    card.innerHTML=`
-      <div class="card-img-wrap">
-        <img src="${p.img}" alt="${p.name}">
-        <div class="card-overlay">
-          <button class="overlay-btn" onclick="addToCart(${p.id})">Add to Cart</button>
-        </div>
-      </div>
-      <div class="card-info">
-        <div class="card-category">${p.category}</div>
-        <div class="card-name">${p.name}</div>
-        <div class="card-price">Rs <span>${p.price}</span></div>
-      </div>
-    `;
-    productGrid.appendChild(card);
+      <button onclick="addToCart(${p.id})">Add to Cart</button>
+      <button onclick="addWishlist(${p.id})">❤️</button>
+    </div>`;
   });
+  document.getElementById("products").innerHTML=html;
 }
 
 function addToCart(id){
-  const product = products.find(p=>p.id===id);
-  const existing = cart.find(c=>c.id===id);
-  if(existing){ existing.qty++; } 
-  else { cart.push({...product,qty:1}); }
-  renderCart();
+  let item = cart.find(x=>x.id===id);
+  if(item){
+    item.qty++;
+  } else {
+    let p = products.find(x=>x.id===id);
+    cart.push({...p, qty:1});
+  }
+  updateCart();
 }
 
-function renderCart(){
-  if(cart.length===0){ cartBody.innerHTML="<p>Your cart is empty.</p>"; cartTotal.textContent="Rs 0"; return;}
-  cartBody.innerHTML='';
-  let total = 0;
-  cart.forEach(item=>{
-    total += item.price * item.qty;
-    const row = document.createElement('div');
-    row.className="cart-item";
-    row.innerHTML=`
-      <img src="${item.img}" alt="${item.name}">
-      <div>
-        <div>${item.name}</div>
-        <div>Rs ${item.price} x ${item.qty}</div>
-        <div class="qty-ctrl">
-          <button class="qty-btn" onclick="decreaseQty(${item.id})">-</button>
-          <span class="qty-num">${item.qty}</span>
-          <button class="qty-btn" onclick="increaseQty(${item.id})">+</button>
-        </div>
-      </div>
-      <button class="cart-remove" onclick="removeItem(${item.id})">&times;</button>
-    `;
-    cartBody.appendChild(row);
+function updateCart(){
+  let html="";
+  let total=0;
+  cart.forEach(i=>{
+    total += i.price*i.qty;
+    html+=`
+    <div>
+      ${i.name} 
+      <button onclick="changeQty(${i.id},-1)">-</button>
+      ${i.qty}
+      <button onclick="changeQty(${i.id},1)">+</button>
+      Rs ${i.price*i.qty}
+    </div>`;
   });
-  cartTotal.textContent="Rs "+total;
+
+  document.getElementById("cartItems").innerHTML=html;
+  document.getElementById("total").innerText=total;
+  document.getElementById("cartCount").innerText=cart.length;
 }
 
-function increaseQty(id){ const item = cart.find(c=>c.id===id); item.qty++; renderCart();}
-function decreaseQty(id){ const item = cart.find(c=>c.id===id); if(item.qty>1){item.qty--;} renderCart();}
-function removeItem(id){ cart = cart.filter(c=>c.id!==id); renderCart();}
+function changeQty(id,change){
+  let item = cart.find(x=>x.id===id);
+  item.qty += change;
+  if(item.qty<=0){
+    cart = cart.filter(x=>x.id!==id);
+  }
+  updateCart();
+}
 
-// FILTERS
-filterBtns.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    filterBtns.forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    renderProducts(btn.dataset.filter,searchBar.value);
+function addWishlist(id){
+  if(!wishlist.includes(id)){
+    wishlist.push(id);
+  }
+  document.getElementById("wishCount").innerText=wishlist.length;
+}
+
+function whatsappOrder(){
+  let msg="Order:\n";
+  cart.forEach(i=>{
+    msg += `${i.name} x${i.qty} = Rs ${i.price*i.qty}\n`;
   });
-});
 
-// SEARCH
-searchBar.addEventListener('input',()=>{ 
-  const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
-  renderProducts(activeFilter, searchBar.value);
-});
+  window.open("https://wa.me/977XXXXXXXXXX?text="+encodeURIComponent(msg));
+}
 
-// CART DRAWER
-cartTrigger.addEventListener('click',()=>{ cartDrawer.classList.add('open');});
-cartClose.addEventListener('click',()=>{ cartDrawer.classList.remove('open');});
+function buyNow(){
+  alert("Order placed!");
+}
 
-// WHATSAPP ORDER
-whatsappBtn.addEventListener('click',()=>{
-  if(cart.length===0) return;
-  let message = "Order from Kapada Pasal:%0A";
-  cart.forEach(item=>{ message+=`${item.name} x ${item.qty} = Rs ${item.price*item.qty}%0A`; });
-  message += `Total: Rs ${cart.reduce((a,b)=>a+b.price*b.qty,0)}`;
-  window.open(`https://wa.me/9779800000000?text=${message}`,'_blank');
-});
+function esewaPay(){
+  alert("eSewa payment demo (integration later)");
+}
 
-// INITIAL RENDER
 renderProducts();
+
 </script>
 
 </body>
