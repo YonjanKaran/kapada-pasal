@@ -3,291 +3,241 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kapada Pasal</title>
+<title>Kapada Luxe</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 
-<style>
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  background:#f5f5f7;
-}
-
-/* HEADER */
-header{
-  display:flex;
-  justify-content:space-between;
-  padding:18px 24px;
-  background:white;
-  position:sticky;
-  top:0;
-  z-index:100;
-}
-
-.logo{font-weight:600;font-size:18px;}
-
-.header-right{
-  display:flex;
-  gap:15px;
-  align-items:center;
-}
-
-.search{
-  padding:8px;
-  border-radius:8px;
-  border:1px solid #ddd;
-}
-
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:20px;
-  padding:20px;
-}
-
-/* CARD */
-.card{
-  background:white;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 10px 25px rgba(0,0,0,0.05);
-  transition:.3s;
-}
-.card:hover{transform:translateY(-6px);}
-
-.card img{width:100%;height:200px;object-fit:cover;}
-
-.card-body{padding:15px;}
-
-.price{color:#b89a6a;font-weight:600;}
-
-/* BUTTON */
-.btn{
-  padding:10px;
-  border:none;
-  background:black;
-  color:white;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-/* FILTER */
-.filters{
-  display:flex;
-  gap:10px;
-  padding:10px 20px;
-}
-
-.filter-btn{
-  padding:6px 12px;
-  border:1px solid #ddd;
-  cursor:pointer;
-  border-radius:6px;
-}
-
-/* CART */
-.cart{
-  position:fixed;
-  right:-100%;
-  top:0;
-  width:90%;
-  max-width:380px;
-  height:100%;
-  background:white;
-  padding:20px;
-  transition:.3s;
-  z-index:999;
-}
-.cart.open{right:0;}
-
-.backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.4);
-  display:none;
-}
-.backdrop.show{display:block;}
-
-/* QTY */
-.qty{
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-/* TRUST */
-.trust{
-  text-align:center;
-  padding:10px;
-  color:#666;
-}
-
-/* HEART */
-.heart{cursor:pointer;}
-</style>
 </head>
-
 <body>
 
 <header>
-  <div class="logo">Kapada Pasal</div>
+  <h1>Kapada Luxe</h1>
 
-  <div class="header-right">
-    <input class="search" placeholder="Search..." onkeyup="searchProduct(this.value)">
+  <input type="text" id="search" placeholder="Search...">
+
+  <div>
     ❤️ <span id="wishCount">0</span>
-    <button class="btn" onclick="toggleCart()">Cart (<span id="cartCount">0</span>)</button>
+    🛒 <span id="cartCount">0</span>
   </div>
 </header>
 
-<div class="trust">
-  Free Delivery • 7 Days Return • Premium Quality
-</div>
-
+<!-- FILTER -->
 <div class="filters">
-  <button class="filter-btn" onclick="filter('all')">All</button>
-  <button class="filter-btn" onclick="filter('men')">Men</button>
-  <button class="filter-btn" onclick="filter('women')">Women</button>
-  <button class="filter-btn" onclick="filter('kids')">Kids</button>
+  <button onclick="filter('all')">All</button>
+  <button onclick="filter('men')">Men</button>
+  <button onclick="filter('women')">Women</button>
+  <button onclick="filter('kids')">Kids</button>
 </div>
 
-<div class="grid" id="products"></div>
+<!-- PRODUCTS -->
+<div id="products" class="grid"></div>
 
 <!-- CART -->
-<div class="cart" id="cart">
+<div class="cart">
   <h3>Cart</h3>
   <div id="cartItems"></div>
   <h4>Total: Rs <span id="total">0</span></h4>
 
-  <button class="btn" onclick="whatsappOrder()">WhatsApp Order</button>
-  <button class="btn" onclick="buyNow()">Buy Now</button>
-  <button class="btn" onclick="esewaPay()">eSewa</button>
+  <button onclick="orderWhatsApp()">WhatsApp Order</button>
+  <button onclick="buyNow()">Buy Now</button>
+  <button onclick="payEsewa()">Pay eSewa</button>
 </div>
 
-<div class="backdrop" id="backdrop" onclick="toggleCart()"></div>
+<script src="app.js"></script>
 
-<script>
+</body>
+</html>
+body{
+  font-family: sans-serif;
+  margin:0;
+  background:#f5f5f7;
+}
 
-let products=[
-{id:1,name:"Men Shirt",price:1200,cat:"men",img:"https://via.placeholder.com/300"},
-{id:2,name:"Women Dress",price:1800,cat:"women",img:"https://via.placeholder.com/300"},
-{id:3,name:"Kids T-shirt",price:800,cat:"kids",img:"https://via.placeholder.com/300"},
-{id:4,name:"Jacket",price:2500,cat:"men",img:"https://via.placeholder.com/300"}
+header{
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  background:white;
+  position:sticky;
+  top:0;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+  padding:20px;
+}
+
+.card{
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+button{
+  margin-top:5px;
+  padding:6px;
+  border:none;
+  background:black;
+  color:white;
+  cursor:pointer;
+}
+
+.cart{
+  position:fixed;
+  right:0;
+  top:0;
+  width:260px;
+  height:100%;
+  background:white;
+  padding:10px;
+  box-shadow:-5px 0 20px rgba(0,0,0,0.1);
+}
+
+.filters{
+  text-align:center;
+  margin-top:10px;
+}
+let products = [
+ {id:1,name:"Shirt",price:1000,cat:"men"},
+ {id:2,name:"Pant",price:1500,cat:"men"},
+ {id:3,name:"Dress",price:2000,cat:"women"},
+ {id:4,name:"Kids T-shirt",price:800,cat:"kids"}
 ];
 
-let cart=[];
-let wishlist=[];
-let filtered=[...products];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let wishlist = JSON.parse(localStorage.getItem("wish")) || [];
 
-/* RENDER */
-function render(){
- let html="";
- filtered.forEach(p=>{
-  html+=`
-  <div class="card">
-    <img src="${p.img}">
-    <div class="card-body">
+function renderProducts(list=products){
+  let html="";
+  list.forEach(p=>{
+    html+=`
+    <div class="card">
       <h4>${p.name}</h4>
-      <div class="price">Rs ${p.price}</div>
+      <p>Rs ${p.price}</p>
 
-      <button class="btn" onclick="addToCart(${p.id})">Add to Cart</button>
-      <span class="heart" onclick="addWishlist(${p.id})">❤️</span>
-    </div>
-  </div>`;
- });
- document.getElementById("products").innerHTML=html;
+      <button onclick="addCart(${p.id})">Add</button>
+      <button onclick="wish(${p.id})">❤️</button>
+    </div>`;
+  });
+  document.getElementById("products").innerHTML=html;
 }
 
-/* FILTER */
+function addCart(id){
+  let item = cart.find(i=>i.id===id);
+  if(item){
+    item.qty++;
+  }else{
+    let p=products.find(x=>x.id===id);
+    cart.push({...p,qty:1});
+  }
+  saveCart();
+}
+
+function saveCart(){
+  localStorage.setItem("cart",JSON.stringify(cart));
+  renderCart();
+}
+
+function renderCart(){
+  let html="";
+  let total=0;
+
+  cart.forEach((c,i)=>{
+    total+=c.price*c.qty;
+
+    html+=`
+    <div>
+      ${c.name} x ${c.qty}
+      <button onclick="inc(${i})">+</button>
+      <button onclick="dec(${i})">-</button>
+    </div>`;
+  });
+
+  document.getElementById("cartItems").innerHTML=html;
+  document.getElementById("total").innerText=total;
+  document.getElementById("cartCount").innerText=cart.length;
+}
+
+function inc(i){ cart[i].qty++; saveCart(); }
+function dec(i){ cart[i].qty--; if(cart[i].qty<=0) cart.splice(i,1); saveCart(); }
+
+function wish(id){
+  wishlist.push(id);
+  localStorage.setItem("wish",JSON.stringify(wishlist));
+  document.getElementById("wishCount").innerText=wishlist.length;
+}
+
 function filter(cat){
- if(cat==="all") filtered=[...products];
- else filtered=products.filter(p=>p.cat===cat);
- render();
+  if(cat==="all") renderProducts();
+  else renderProducts(products.filter(p=>p.cat===cat));
 }
 
-/* SEARCH */
-function searchProduct(q){
- q=q.toLowerCase();
- filtered=products.filter(p=>p.name.toLowerCase().includes(q));
- render();
+document.getElementById("search").addEventListener("input",(e)=>{
+  let val=e.target.value.toLowerCase();
+  renderProducts(products.filter(p=>p.name.toLowerCase().includes(val)));
+});
+
+function orderWhatsApp(){
+  let text="Order:%0A";
+  cart.forEach(c=>{
+    text+=`${c.name} x ${c.qty}%0A`;
+  });
+  window.open(`https://wa.me/97798XXXXXXXX?text=${text}`);
 }
 
-/* CART */
-function addToCart(id){
- let item=cart.find(x=>x.id===id);
- if(item) item.qty++;
- else{
-  let p=products.find(x=>x.id===id);
-  cart.push({...p,qty:1});
- }
- updateCart();
-}
-
-function updateCart(){
- let html="";
- let total=0;
-
- cart.forEach(i=>{
-  total+=i.price*i.qty;
-  html+=`
-  <div>
-    ${i.name}
-    <div class="qty">
-      <button onclick="changeQty(${i.id},-1)">-</button>
-      ${i.qty}
-      <button onclick="changeQty(${i.id},1)">+</button>
-    </div>
-    Rs ${i.price*i.qty}
-  </div><hr>`;
- });
-
- document.getElementById("cartItems").innerHTML=html;
- document.getElementById("total").innerText=total;
- document.getElementById("cartCount").innerText=cart.length;
-}
-
-function changeQty(id,c){
- let i=cart.find(x=>x.id===id);
- i.qty+=c;
- if(i.qty<=0) cart=cart.filter(x=>x.id!==id);
- updateCart();
-}
-
-/* WISHLIST */
-function addWishlist(id){
- if(!wishlist.includes(id)) wishlist.push(id);
- document.getElementById("wishCount").innerText=wishlist.length;
-}
-
-/* CART UI */
-function toggleCart(){
- document.getElementById("cart").classList.toggle("open");
- document.getElementById("backdrop").classList.toggle("show");
-}
-
-/* WHATSAPP */
-function whatsappOrder(){
- let msg="Order:%0A";
- cart.forEach(i=>{
-  msg+=`${i.name} x${i.qty} = Rs ${i.price*i.qty}%0A`;
- });
- window.open("https://wa.me/977XXXXXXXXXX?text="+msg);
-}
-
-/* BUY */
 function buyNow(){
- alert("Order placed!");
+  alert("Proceed to payment");
 }
 
-/* ESEWA */
-function esewaPay(){
- alert("eSewa integration later (backend needed)");
+function payEsewa(){
+  window.open("https://esewa.com.np");
 }
 
-render();
+renderProducts();
+renderCart();
+  <!DOCTYPE html>
+<html>
+<body>
 
+<h2>Admin Panel</h2>
+
+<input id="name" placeholder="Name">
+<input id="price" placeholder="Price">
+<select id="cat">
+  <option>men</option>
+  <option>women</option>
+  <option>kids</option>
+</select>
+
+<button onclick="add()">Add Product</button>
+
+<script>
+let products = JSON.parse(localStorage.getItem("adminProducts")) || [];
+
+function add(){
+  let p={
+    id:Date.now(),
+    name:document.getElementById("name").value,
+    price:document.getElementById("price").value,
+    cat:document.getElementById("cat").value
+  };
+  products.push(p);
+  localStorage.setItem("adminProducts",JSON.stringify(products));
+  alert("Added");
+}
 </script>
-
+// paste from Firebase console
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+};
+firebase.initializeApp(firebaseConfig);
 </body>
 </html>
